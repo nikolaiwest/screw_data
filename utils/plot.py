@@ -1,4 +1,3 @@
-from email.policy import default
 import streamlit as st
 
 from bokeh.plotting import figure
@@ -9,7 +8,7 @@ from utils.observation import Observation
 def plot_single_observation(
     Obs : Observation, 
     show_linear_basis : bool
-) -> None:
+    ) -> None:
     '''Plotting function to display a single Obervation using Bokeh. 
 
     Parameters
