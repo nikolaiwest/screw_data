@@ -1,0 +1,185 @@
+[base]
+init_x = [ 0.0, 20.0, 210.0, 240.0, 300.0, 340.0, 360.0,]
+init_y = [ 0.0, 2.0, 2.0, 4.5, 17.5, 20.0, 20.0,]
+
+[filter]
+list_of_types = [ "Savitzky-Golay filter", "No filter",]
+selected_type = "Savitzky-Golay filter"
+filter_sg_window_length_val = 21
+filter_sg_window_length_min = 5
+filter_sg_window_length_max = 301
+filter_sg_window_length_stp = 2
+filter_sg_poly_order_val = 2
+filter_sg_poly_order_min = 0
+filter_sg_poly_order_max = 9
+filter_sg_poly_order_stp = 1
+filter_sg_window_length = 21
+filter_sg_poly_order = 2
+
+[distributions]
+list_of_types = [ "Normal", "Uniform", "Weibull",]
+
+[amounts]
+number_of_ok = 10000
+number_of_ok_to_plot = 20
+
+[randomize_scattering]
+apply = 1
+selected_type = "Uniform"
+normal_stadev_val = 0.0
+normal_stadev_min = 0.0
+normal_stadev_max = 1.0
+normal_stadev_stp = 0.01
+uniform_range_val = 0.8
+uniform_range_min = 0.0
+uniform_range_max = 4.0
+uniform_range_stp = 0.01
+weibull_alpha_val = 0.25
+weibull_alpha_min = 0.0
+weibull_alpha_max = 2.0
+weibull_alpha_stp = 0.01
+
+[randomize_tightening]
+apply = 1
+selected_type = "Weibull"
+normal_stadev_val = 0.25
+normal_stadev_min = 0.0
+normal_stadev_max = 2.0
+normal_stadev_stp = 0.01
+uniform_range_val = 1.0
+uniform_range_min = 0.0
+uniform_range_max = 4.0
+uniform_range_stp = 0.01
+weibull_alpha_val = 0.13
+weibull_alpha_min = 0.0
+weibull_alpha_max = 2.0
+weibull_alpha_stp = 0.01
+lower_xlimitation = 15.0
+upper_xlimitation = 210.0
+
+[randomize_horizontal_offset]
+apply = 1
+selected_points = [ "P2", "P6",]
+selected_type = "Weibull"
+normal_stadev_val = 3.5
+normal_stadev_min = 0.0
+normal_stadev_max = 50.0
+normal_stadev_stp = 0.1
+uniform_range_val = 15.0
+uniform_range_min = 0.0
+uniform_range_max = 100.0
+uniform_range_stp = 0.1
+weibull_alpha_val = 37.63
+weibull_alpha_min = 0.0
+weibull_alpha_max = 50.0
+weibull_alpha_stp = 0.01
+
+[randomize_vertical_offset]
+apply = 1
+selected_points = [ "P3", "P4", "P5", "P6",]
+selected_type = "Uniform"
+normal_stadev_val = 0.5
+normal_stadev_min = 0.0
+normal_stadev_max = 5.0
+normal_stadev_stp = 0.01
+uniform_range_val = 1.77
+uniform_range_min = 0.0
+uniform_range_max = 10.0
+uniform_range_stp = 0.01
+weibull_alpha_val = 0.5
+weibull_alpha_min = 0.0
+weibull_alpha_max = 5.0
+weibull_alpha_stp = 0.01
+
+[preparation]
+remove_neg_y_values = 1
+
+[visualization]
+show_linear_basis = 1
+show_linear_basis_observation = 1
+
+[anomalies_type_1]
+generate = 1
+generate_amount_val = 1200
+generate_amount_min = 1
+generate_amount_max = 1000000000
+generate_amount_stp = 100
+generate_amount_to_plot_val = 5
+generate_amount_to_plot_min = 1
+generate_amount_to_plot_max = 1000000
+generate_amount_to_plot_stp = 10
+lower_xlimitation = 10.0
+upper_xlimitation = 20.0
+width_val = 50.0
+width_min = 3.0
+width_max = 200.0
+width_stp = 1.0
+hight_val = 10.0
+hight_min = 0.0
+hight_max = 50.0
+hight_stp = 1.0
+leap_shape = "Right-skewed"
+leap_shapes = [ "Centered", "Right-skewed", "Left-skewed", "Random",]
+
+[anomalies_type_1_width]
+selected_type = "Uniform"
+normal_stadev_val = 5.0
+normal_stadev_min = 0.0
+normal_stadev_max = 45.0
+normal_stadev_stp = 0.1
+uniform_range_val = 5.0
+uniform_range_min = 0.0
+uniform_range_max = 90.0
+uniform_range_stp = 0.1
+weibull_alpha_val = 10.0
+weibull_alpha_min = 0.0
+weibull_alpha_max = 45.0
+weibull_alpha_stp = 0.1
+
+[anomalies_type_1_hight]
+selected_type = "Uniform"
+normal_stadev_val = 2.0
+normal_stadev_min = 0.0
+normal_stadev_max = 15.0
+normal_stadev_stp = 0.1
+uniform_range_val = 4.0
+uniform_range_min = 0.0
+uniform_range_max = 30.0
+uniform_range_stp = 0.1
+weibull_alpha_val = 2.0
+weibull_alpha_min = 0.0
+weibull_alpha_max = 15.0
+weibull_alpha_stp = 0.1
+
+[anomalies_type_2]
+generate = 1
+generate_amount_val = 800
+generate_amount_min = 1
+generate_amount_max = 1000000000
+generate_amount_stp = 100
+generate_amount_to_plot_val = 1
+generate_amount_to_plot_min = 1
+generate_amount_to_plot_max = 1000000
+generate_amount_to_plot_stp = 10
+
+[anomalies_type_3]
+generate = 1
+generate_amount_val = 600
+generate_amount_min = 1
+generate_amount_max = 1000000000
+generate_amount_stp = 100
+generate_amount_to_plot_val = 1
+generate_amount_to_plot_min = 1
+generate_amount_to_plot_max = 1000000
+generate_amount_to_plot_stp = 10
+
+[anomalies_type_4]
+generate = 1
+generate_amount_val = 400
+generate_amount_min = 1
+generate_amount_max = 1000000000
+generate_amount_stp = 100
+generate_amount_to_plot_val = 1
+generate_amount_to_plot_min = 1
+generate_amount_to_plot_max = 1000000
+generate_amount_to_plot_stp = 10

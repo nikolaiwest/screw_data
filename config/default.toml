@@ -1,0 +1,85 @@
+[base]
+init_x = [0, 45, 720, 900, 1080, 1260, 1440]
+init_y = [0,  2,   2,   4,   18,   20,   20]
+
+[filter]
+list_of_types = ['Savitzky-Golay filter', 'No filter'] #
+selected_type = 'Savitzky-Golay filter'
+filter_sg_window_length = 151
+filter_sg_poly_order = 2
+
+[distributions]
+list_of_types = ['Normal', 'Uniform', 'Weibull']
+
+[randomize_scattering]
+apply = 1
+selected_type = 'Normal'
+normal_stadev_val = 0.15
+normal_stadev_min = 0.00
+normal_stadev_max = 2.00
+normal_stadev_stp = 0.01
+uniform_range_val = 1.00
+uniform_range_min = 0.00
+uniform_range_max = 4.00
+uniform_range_stp = 0.01
+weibull_alpha_val = 0.25
+weibull_alpha_min = 0.00
+weibull_alpha_max = 2.00
+weibull_alpha_stp = 0.01
+
+[randomize_tightening]
+apply = 1
+selected_type = 'Weibull'
+normal_stadev_val = 0.25
+normal_stadev_min = 0.00
+normal_stadev_max = 2.00
+normal_stadev_stp = 0.01
+uniform_range_val = 1.00
+uniform_range_min = 0.00
+uniform_range_max = 4.00
+uniform_range_stp = 0.01
+weibull_alpha_val = 0.25
+weibull_alpha_min = 0.00
+weibull_alpha_max = 2.00
+weibull_alpha_stp = 0.01
+lower_xlimitation = 45.0
+upper_xlimitation = 720.0
+
+[randomize_x_steps]
+apply = 1
+selected_type = 'Uniform'
+normal_stadev_val = 0.25
+normal_stadev_min = 0.25
+normal_stadev_max = 0.25
+normal_stadev_stp = 0.25
+uniform_range_val = 1.00
+uniform_range_min = 1.00
+uniform_range_max = 1.00
+uniform_range_stp = 1.00
+weibull_alpha_val = 0.25
+weibull_alpha_min = 0.25
+weibull_alpha_max = 0.25
+weibull_alpha_stp = 0.25
+
+[randomize_y_steps]
+apply = 1
+selected_type = 'Uniform'
+normal_stadev_val = 0.25
+normal_stadev_min = 0.25
+normal_stadev_max = 0.25
+normal_stadev_stp = 0.25
+uniform_range_val = 1.00
+uniform_range_min = 1.00
+uniform_range_max = 1.00
+uniform_range_stp = 1.00
+weibull_alpha_val = 0.25
+weibull_alpha_min = 0.25
+weibull_alpha_max = 0.25
+weibull_alpha_stp = 0.25
+
+[preparation]
+remove_neg_y_values = 1
+
+[visualization]
+show_linear_basis = 1
+

@@ -1,0 +1,18 @@
+[information]
+baseline_neg_warning = 'Warning: The y-values contain negative measurements of torque. You can either adjust your parameter choices or you can subsitute the negative values by using the checkbox "Set negative y values to Zero". Additonally, you can simply continue and accept the negtive values in your observations.'
+
+[basis]
+show_linear_basis_tt = 'A number of points is used to shape the course of each screw run. Each point P_i consists of value pair x_i and y_i. The current limitations are set to 7200° for the angle rotation and to 100 Nm for the torque. Additionally, you can add and remove points using the buttons above.'
+
+[filter]
+filter_sg_window_length_tt = 'Adjust the smoothing factor according to the Savitzky-Golay filter. The value defines the length of the filter window (i.e., the number of coefficients). It must be a positive odd integer. Reccomended default is 21.'
+filter_sg_poly_order_tt = 'The order of the polynomial used to fit the samples. Polynomial order must be less than the window length. Reccomended default is 2.'
+
+[distributions]
+normal_stadev = 'To represent minor stick-slip effects during the tigheting phase, this factor determines the scope of the applied randomness. It applies a random value in the selected intervall to all observations of this phase. The phase is limited by the two Points P2 and P3 (see radio button for information).'
+uniform_range = 'add a description later'
+weibull_alpha = 'add a description later'
+
+[anomalies]
+amount = 'Select the total amount of anomalies of the given type to be generated in the final dataset. Select at least 1 and at most 10^9 observations. Use the previous checkbox, if no anomaly of this type should be generated.'
+amount_to_plot = 'Select the amount of anomalies to plot as an example. This number is only used to display data in this page. It will not affect the final dataset. To adjust the number of anomalies, use the previous input.'
