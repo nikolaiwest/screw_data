@@ -24,7 +24,7 @@ class Configuration:
         }
 
         # set default values for all amounts
-        self.number_of_ok = 10000  # parameter["amounts"]["number_of_ok"]
+        self.number_of_ok = parameter["amounts"]["number_of_ok"]
         self.number_of_ok_to_plot = parameter["amounts"]["number_of_ok_to_plot"]
 
         # set default values for smoothing filter
