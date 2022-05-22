@@ -1,18 +1,25 @@
 [base]
-init_x = [ 0.0, 20.0, 210.0, 240.0, 300.0, 340.0, 360.0,]
+init_x = [ 0.0, 20.0, 210.0, 240.0, 300.0, 340.0, 400.0,]
 init_y = [ 0.0, 2.0, 2.0, 4.5, 17.5, 20.0, 20.0,]
 
 [filter]
-list_of_types = [ "Savitzky-Golay filter", "No filter",]
-selected_type = "Savitzky-Golay filter"
-filter_sg_window_length_val = 21
-filter_sg_window_length_min = 5
-filter_sg_window_length_max = 301
-filter_sg_window_length_stp = 2
-filter_sg_poly_order_val = 2
-filter_sg_poly_order_min = 0
-filter_sg_poly_order_max = 9
-filter_sg_poly_order_stp = 1
+apply = 1
+list_of_types = [ "Savitzky-Golay-Filter", "Discrete Linear Convolution",]
+selected_type = "Savitzky-Golay-Filter"
+sg_window_length_val = 21
+sg_window_length_min = 5
+sg_window_length_max = 301
+sg_window_length_stp = 2
+sg_poly_order_val = 2
+sg_poly_order_min = 0
+sg_poly_order_max = 9
+sg_poly_order_stp = 1
+sg_window_length = 21
+sg_poly_order = 2
+conv_box_pts_val = 11
+conv_box_pts_min = 1
+conv_box_pts_max = 50
+conv_box_pts_stp = 1
 filter_sg_window_length = 21
 filter_sg_poly_order = 2
 
@@ -24,7 +31,7 @@ number_of_ok = 10000
 number_of_ok_to_plot = 20
 
 [randomize_scattering]
-apply = 1
+apply = 0
 selected_type = "Uniform"
 normal_stadev_val = 0.0
 normal_stadev_min = 0.0
@@ -40,7 +47,7 @@ weibull_alpha_max = 2.0
 weibull_alpha_stp = 0.01
 
 [randomize_tightening]
-apply = 1
+apply = 0
 selected_type = "Weibull"
 normal_stadev_val = 0.25
 normal_stadev_min = 0.0
@@ -69,7 +76,7 @@ uniform_range_val = 15.0
 uniform_range_min = 0.0
 uniform_range_max = 100.0
 uniform_range_stp = 0.1
-weibull_alpha_val = 37.63
+weibull_alpha_val = 50.0
 weibull_alpha_min = 0.0
 weibull_alpha_max = 50.0
 weibull_alpha_stp = 0.01
@@ -82,7 +89,7 @@ normal_stadev_val = 0.5
 normal_stadev_min = 0.0
 normal_stadev_max = 5.0
 normal_stadev_stp = 0.01
-uniform_range_val = 1.77
+uniform_range_val = 0.36
 uniform_range_min = 0.0
 uniform_range_max = 10.0
 uniform_range_stp = 0.01
@@ -95,7 +102,7 @@ weibull_alpha_stp = 0.01
 remove_neg_y_values = 1
 
 [visualization]
-show_linear_basis = 1
+show_linear_basis = 0
 show_linear_basis_observation = 1
 
 [anomalies_type_1]
