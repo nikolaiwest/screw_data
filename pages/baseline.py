@@ -48,14 +48,14 @@ def baseline_sb(Config: Configuration, parameter: dict, info_text: dict) -> None
     st.sidebar.subheader("Preference Selection for Parameter for the Baseline")
 
     # 1st Sidebar Expander
-    with st.sidebar.expander("Adjust the Linear Basis by adding or removing Points"):
-        baseline_sb_change_number_of_points(Config)
-
-    # 1st Sidebar Expander
     with st.sidebar.expander(
         "Adjust the values of the Points used as the Linear Basis"
     ):
         baseline_sb_linear_basis(Config, parameter, info_text)
+
+    # 2nd Sidebar Expander
+    with st.sidebar.expander("Adjust the Linear Basis by adding or removing Points"):
+        baseline_sb_change_number_of_points(Config)
 
     # 3rd Sidebar Expander
     with st.sidebar.expander("Adjust the Function for Smoothing the Screw Runs"):
@@ -94,16 +94,30 @@ def baseline_sb_change_number_of_points(Config: Configuration) -> None:
     # separate columns für x and y
     col1, col2 = st.columns([1, 1])
 
-    # add a new P(xi, yi)
+    # add a new Pi(xi, yi)
     if col1.button("Add a new Point"):
+        # get index for new step
         new_idx = len(Config.x_steps)
+        # add points for index
         Config.x_steps[f"x{new_idx}"] = Config.x_steps.get(f"x{new_idx-1}") + 10
         Config.y_steps[f"y{new_idx}"] = Config.y_steps.get(f"y{new_idx-1}") + 0
-    # remove last P(xi, yi)
-    if col2.button("Remove the last Point"):
+        # update Config and reload page
+        update_config(Config)
+        st.experimental_rerun()
+
+    # check if seven or less points available
+    enable_point_removal = not len(Config.x_steps) > 7
+
+    # remove last Pi(xi, yi)
+    if col2.button(label="Remove the last Point", disabled=enable_point_removal):
+        # get index of last point
         last_idx = len(Config.x_steps) - 1
+        # remove points at index
         Config.x_steps.pop(f"x{last_idx}")
         Config.y_steps.pop(f"y{last_idx}")
+        # update Config and reload page
+        update_config(Config)
+        st.experimental_rerun()
 
 
 def baseline_sb_linear_basis(
@@ -177,12 +191,16 @@ def baseline_sb_smoothing_parameter(
 
     # show selectbox for filter choice
     if Config.filter_apply:
+        # get starting index from parameter
+        index = parameter["filter"]["list_of_types"].index(Config.filter_type_selected)
         Config.filter_type_selected = st.selectbox(
-            "Select smoothing method", Config.filter_types, index=0
+            label="Select smoothing method",
+            options=parameter["filter"]["list_of_types"],
+            index=index,
         )
         # filter parameter according to selction
         if (
-            Config.filter_type_selected == Config.filter_types[0]
+            Config.filter_type_selected == parameter["filter"]["list_of_types"][0]
         ):  #'Savitzky-Golay filter'
             Config.filter_sg_window_length = st.slider(
                 label="Adjust the Length of the Smoothing Window",
@@ -201,7 +219,7 @@ def baseline_sb_smoothing_parameter(
                 help=info_text["filter"]["sg_poly_order_tt"],
             )
         if (
-            Config.filter_type_selected == Config.filter_types[1]
+            Config.filter_type_selected == parameter["filter"]["list_of_types"][1]
         ):  #'Discrete linear convolution'
             Config.filter_conv_box_pts = st.slider(
                 label="Adjust the box points for interpolation",

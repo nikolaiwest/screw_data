@@ -24,12 +24,11 @@ class Configuration:
         }
 
         # set default values for all amounts
-        self.number_of_ok = parameter["amounts"]["number_of_ok"]
-        self.number_of_ok_to_plot = parameter["amounts"]["number_of_ok_to_plot"]
+        self.number_of_ok = parameter["amounts"]["number_of_ok_val"]
+        self.number_of_ok_to_plot = parameter["amounts"]["number_of_ok_to_plot_val"]
 
         # set default values for smoothing filter
         self.filter_apply = parameter["filter"]["apply"]
-        self.filter_types = parameter["filter"]["list_of_types"]
         self.filter_type_selected = parameter["filter"]["selected_type"]
         self.filter_sg_window_length = parameter["filter"]["sg_window_length_val"]
         self.filter_sg_poly_order = parameter["filter"]["sg_poly_order_val"]
@@ -158,6 +157,32 @@ class Configuration:
         self.anomaly_type_2_generate_amount_to_plot = parameter["anomalies_type_2"][
             "generate_amount_to_plot_val"
         ]
+        self.anomaly_type_2_width = parameter["anomalies_type_2"]["width_val"]
+        self.anomaly_type_2_width_selected_type = parameter["anomalies_type_2_width"][
+            "selected_type"
+        ]
+        self.anomaly_type_2_width_normal_stadev = parameter["anomalies_type_2_width"][
+            "normal_stadev_val"
+        ]
+        self.anomaly_type_2_width_uniform_range = parameter["anomalies_type_2_width"][
+            "uniform_range_val"
+        ]
+        self.anomaly_type_2_width_weibull_alpha = parameter["anomalies_type_2_width"][
+            "weibull_alpha_val"
+        ]
+        self.anomaly_type_2_hight = parameter["anomalies_type_2"]["hight_val"]
+        self.anomaly_type_2_hight_selected_type = parameter["anomalies_type_2_hight"][
+            "selected_type"
+        ]
+        self.anomaly_type_2_hight_normal_stadev = parameter["anomalies_type_2_hight"][
+            "normal_stadev_val"
+        ]
+        self.anomaly_type_2_hight_uniform_range = parameter["anomalies_type_2_hight"][
+            "uniform_range_val"
+        ]
+        self.anomaly_type_2_hight_weibull_alpha = parameter["anomalies_type_2_hight"][
+            "weibull_alpha_val"
+        ]
 
         # set default values for anomaly (type 3)
         self.anomaly_type_3_generate = parameter["anomalies_type_3"]["generate"]
@@ -167,6 +192,21 @@ class Configuration:
         self.anomaly_type_3_generate_amount_to_plot = parameter["anomalies_type_3"][
             "generate_amount_to_plot_val"
         ]
+        self.anomaly_type_3_offset = parameter["anomalies_type_3"]["offset_val"]
+        self.anomaly_type_3_lower_point = parameter["anomalies_type_3"]["lower_point"]
+        self.anomaly_type_3_upper_point = parameter["anomalies_type_3"]["upper_point"]
+        self.anomaly_type_3_offset_selected_type = parameter["anomalies_type_3_offset"][
+            "selected_type"
+        ]
+        self.anomaly_type_3_offset_normal_stadev = parameter["anomalies_type_3_offset"][
+            "normal_stadev_val"
+        ]
+        self.anomaly_type_3_offset_uniform_range = parameter["anomalies_type_3_offset"][
+            "uniform_range_val"
+        ]
+        self.anomaly_type_3_offset_weibull_alpha = parameter["anomalies_type_3_offset"][
+            "weibull_alpha_val"
+        ]
 
         # set default values for anomaly (type 4)
         self.anomaly_type_4_generate = parameter["anomalies_type_4"]["generate"]
@@ -175,6 +215,21 @@ class Configuration:
         ]
         self.anomaly_type_4_generate_amount_to_plot = parameter["anomalies_type_4"][
             "generate_amount_to_plot_val"
+        ]
+        self.anomaly_type_4_offset = parameter["anomalies_type_4"]["offset_val"]
+        self.anomaly_type_4_lower_point = parameter["anomalies_type_4"]["lower_point"]
+        self.anomaly_type_4_upper_point = parameter["anomalies_type_4"]["upper_point"]
+        self.anomaly_type_4_offset_selected_type = parameter["anomalies_type_4_offset"][
+            "selected_type"
+        ]
+        self.anomaly_type_4_offset_normal_stadev = parameter["anomalies_type_4_offset"][
+            "normal_stadev_val"
+        ]
+        self.anomaly_type_4_offset_uniform_range = parameter["anomalies_type_4_offset"][
+            "uniform_range_val"
+        ]
+        self.anomaly_type_4_offset_weibull_alpha = parameter["anomalies_type_4_offset"][
+            "weibull_alpha_val"
         ]
 
         # set default values for additional preparations
@@ -187,9 +242,6 @@ class Configuration:
 
     def export_config(self):
         pass
-
-
-# def update_config()
 
 
 def get_distribution(
@@ -287,7 +339,7 @@ def show_linear_basis_observation(Config: Configuration) -> None:
     """Simple checkbox to toggle visualization of linear basis of each anomaly"""
     Config.show_linear_basis_observation = bool_to_numeric(
         sidebar.checkbox(
-            "Display the linear basis of each generated anomaly",
+            "Display the linear basis for every Screw Run (slow)",
             value=Config.show_linear_basis_observation,
         )
     )
@@ -321,10 +373,10 @@ def update_config(Config: Configuration) -> None:
 
     # update default values for smoothing filter
     parameter["filter"]["apply"] = Config.filter_apply
-    parameter["filter"]["list_of_types"] = Config.filter_types
     parameter["filter"]["selected_type"] = Config.filter_type_selected
-    parameter["filter"]["filter_sg_window_length"] = Config.filter_sg_window_length
-    parameter["filter"]["filter_sg_poly_order"] = Config.filter_sg_poly_order
+    parameter["filter"]["sg_window_length_val"] = Config.filter_sg_window_length
+    parameter["filter"]["sg_poly_order_val"] = Config.filter_sg_poly_order
+    parameter["filter"]["conv_box_pts_val"] = Config.filter_conv_box_pts
 
     # update default values for random scattering
     parameter["randomize_scattering"]["apply"] = Config.rnd_scattering_apply

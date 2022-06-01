@@ -69,18 +69,18 @@ def normal_sb_amount(Config: Configuration, parameter: dict, info_text: dict) ->
     """
     Config.number_of_ok = st.number_input(
         label="Number of OK observations to create",
-        min_value=0,
-        max_value=1_000_000_000,
-        value=10_000,
-        step=100,
+        min_value=parameter["amounts"]["number_of_ok_min"],
+        max_value=parameter["amounts"]["number_of_ok_max"],
+        value=parameter["amounts"]["number_of_ok_val"],
+        step=parameter["amounts"]["number_of_ok_stp"],
     )
 
     Config.number_of_ok_to_plot = st.number_input(
         label="Number of OK observations to plot",
-        min_value=0,
-        max_value=1_000_000,
-        value=100,
-        step=100,
+        min_value=parameter["amounts"]["number_of_ok_to_plot_min"],
+        max_value=parameter["amounts"]["number_of_ok_to_plot_max"],
+        value=parameter["amounts"]["number_of_ok_to_plot_val"],
+        step=parameter["amounts"]["number_of_ok_to_plot_stp"],
     )
 
 

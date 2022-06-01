@@ -32,7 +32,7 @@ def plot_single_observation(Obs: Observation, show_linear_basis: bool) -> None:
         data=dict(
             x_values=list(Obs.x_values),
             y_values=list(Obs.y_values),
-            names=[f"P{i}" for i in range(len(Obs.x_steps.values()))],
+            names=[f"P{i}" for i in range(len(Obs.x_values))],
         )
     )
     # plot data
@@ -77,16 +77,27 @@ def plot_multiple_observations(
     # set default attributes for the new figure
     plot_observation = figure(
         title=plot_title,
-        x_axis_label="Angle of rotation [°]",
+        x_axis_label="Rotation [°]",
         y_axis_label="Torque [Nm]",
     )
-    # loop all observations
-    for observation in observations:
 
-        # add a linear basis for each anomaly according to type
-        if Config.show_linear_basis_observation:
-            # type 1
-            if observation.apply_type_1_anomaly:
+    # get count of all observations
+    count_observations = len(observations)
+
+    # run spinner to iterate process bar while plotting observations
+    with st.spinner(f"Plotting {count_observations} observations"):
+        # initialize progress bar
+        bar = st.progress(0)
+
+        # iterate over the total number of observations to plot
+        for idx in range(count_observations):
+            observation = observations[idx]
+
+            # add a basis for each anomaly according to type
+            if Config.show_linear_basis_observation:
+                # and observation.obs_type[:-1] == "anomaly_type_0"
+
+                # display linear basis used for this observation
                 data_anomaly = ColumnDataSource(
                     data=dict(
                         x_steps=list(observation.x_steps.values()),
@@ -112,29 +123,35 @@ def plot_multiple_observations(
                 )
                 plot_observation.legend.location = "top_left"
 
-        # define the observation data of all values
-        data_observation = ColumnDataSource(
-            data=dict(
-                x_values=list(observation.x_values),
-                y_values=list(observation.y_values),
+            # define the observation data of all values
+            data_observation = ColumnDataSource(
+                data=dict(
+                    x_values=list(observation.x_values),
+                    y_values=list(observation.y_values),
+                )
             )
-        )
-        # get color
-        plot_color = "blue"
-        if not use_default_color:
-            if observation.obs_type[:-2] == "anomaly_type_":
-                plot_color = "red"
-            if observation.obs_type == "ok":
-                plot_color = "green"
-        # plot observation data
-        plot_observation.line(
-            x="x_values",
-            y="y_values",
-            source=data_observation,
-            color=plot_color,
-            line_width=1.5,
-            line_alpha=0.3,
-        )
+            # get color
+            plot_color = "blue"
+            if not use_default_color:
+                if observation.obs_type[:-2] == "anomaly_type_":
+                    plot_color = "red"
+                if observation.obs_type == "ok":
+                    plot_color = "green"
+            # plot observation data
+            plot_observation.line(
+                x="x_values",
+                y="y_values",
+                source=data_observation,
+                color=plot_color,
+                line_width=1.5,
+                line_alpha=0.3,
+            )
+
+            # update progress bar for according to index
+            bar.progress(int((idx + 1) * (100 / (count_observations))))
+            # unload bar after last observation
+            if count_observations == idx + 1:
+                bar.empty()
 
     # add the linear baseline from the config
     if Config.show_linear_basis:
@@ -152,7 +169,7 @@ def plot_linear_basis(
     Parameters
     ---
     plot_observation : figure
-        Existing bokeh figure to which the base line is added
+        Existing bokeh figure to which the baseline is added
     Obs : Observation
         Observation object as reference for the baseline
     line_color : str

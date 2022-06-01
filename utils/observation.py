@@ -29,18 +29,19 @@ def get_slope(p1: int, p2: int) -> float:
 class Observation:
     def __init__(self, Config: Configuration, obs_type: str):
         self.obs_type = obs_type
-        # x and y steps as dict
+        # get x and y steps as a dict, then apply all "Normal" transformations
         self.x_steps = self.apply_horizontal_offset(Config)
         self.y_steps = self.apply_vertical_offset(Config)
         # x and y step insertion for anomaly_type_01 and anomaly_type_02
         if self.obs_type == "anomaly_type_01":
             self.apply_type_1_anomaly(Config)
-        if self.obs_type == "anomaly_type_02":
+        elif self.obs_type == "anomaly_type_02":
             self.apply_type_2_anomaly(Config)
         # x and y step distortion for anomaly_type_03 and anomaly_type_04
-        if self.obs_type == "anomaly_type_03" or self.obs_type == "anomaly_type_04":
-            self.apply_anomaly_incline(Config, obs_type)
-
+        elif self.obs_type == "anomaly_type_03":
+            self.apply_type_3_anomaly(Config)
+        elif self.obs_type == "anomaly_type_04":
+            self.apply_type_4_anomaly(Config)
         # x and y values as list
         self.y_values = self.get_y(Config)
         self.x_values = self.get_x()
@@ -60,11 +61,11 @@ class Observation:
         # add a filter to smoothen the interpolation according to selection
         if Config.filter_apply:
             if (
-                Config.filter_type_selected == Config.filter_types[0]
+                Config.filter_type_selected == "Savitzky-Golay-Filter"
             ):  # "Savitzky-Golay-Filter"
                 y_values = self.apply_savitzky_golay_filter(y_values, Config)
             if (
-                Config.filter_type_selected == Config.filter_types[1]
+                Config.filter_type_selected == "Discrete Linear Convolution"
             ):  # "Discrete Linear Convolution"
                 y_values = self.apply_convolve_filter(y_values, Config)
 
@@ -77,6 +78,8 @@ class Observation:
         # remove any negative y values and set them to zero
         if Config.remove_neg_y_values:
             y_values = self.remove_neg_y_values(y_values)
+        # round y_values by six decimal places to avoid issues with precicion floating-point arithmetic
+        y_values = [round(y, 6) for y in y_values]
         return y_values
 
     def apply_linear_interpolation(self) -> list:
@@ -164,7 +167,7 @@ class Observation:
 
         # check if offset needs to be applied
         if not Config.offset_hori_apply or self.obs_type == "baseline":
-            return Config.x_steps
+            return {k: Config.x_steps[k] for k in Config.x_steps.keys()}
         # apply horizontal offset
         else:
             # steps as new dict
@@ -233,7 +236,6 @@ class Observation:
             return y_steps
 
     def apply_type_1_anomaly(self, Config: Configuration) -> None:
-
         # create three new steps in dict with default value
         temp_len = len(Config.x_steps)
         temp_x_steps = list(self.x_steps.values())
@@ -252,12 +254,12 @@ class Observation:
                 Config.anomaly_type_1_width
                 + gauss(0, Config.anomaly_type_1_width_normal_stadev)
             )
-        if Config.anomaly_type_1_width_selected_type == "Uniform":
+        elif Config.anomaly_type_1_width_selected_type == "Uniform":
             uniform_range = Config.anomaly_type_1_width_uniform_range / 2
             width = int(
                 Config.anomaly_type_1_width + uniform(-uniform_range, uniform_range)
             )
-        if Config.anomaly_type_1_width_selected_type == "Weibull":
+        elif Config.anomaly_type_1_width_selected_type == "Weibull":
             width = int(
                 Config.anomaly_type_1_width
                 + weibullvariate(Config.anomaly_type_1_width_weibull_alpha, beta=1.0)
@@ -267,10 +269,10 @@ class Observation:
             hight = Config.anomaly_type_1_hight + gauss(
                 0, Config.anomaly_type_1_hight_normal_stadev
             )
-        if Config.anomaly_type_1_hight_selected_type == "Uniform":
+        elif Config.anomaly_type_1_hight_selected_type == "Uniform":
             uniform_range = Config.anomaly_type_1_hight_uniform_range / 2
             hight = Config.anomaly_type_1_hight + uniform(-uniform_range, uniform_range)
-        if Config.anomaly_type_1_hight_selected_type == "Weibull":
+        elif Config.anomaly_type_1_hight_selected_type == "Weibull":
             hight = Config.anomaly_type_1_hight + weibullvariate(
                 Config.anomaly_type_1_hight_weibull_alpha, beta=1.0
             )
@@ -294,38 +296,95 @@ class Observation:
             self.x_steps["x3"] = self.x_steps["x2"] + uniform(1, width - 1)
         # set y values for new points
         self.y_steps["y2"] = self.y_steps["y1"]  # previous y value
-        self.y_steps["y3"] = self.y_steps["y3"] + hight
+        self.y_steps["y3"] = (
+            self.y_steps["y2"] + hight
+        )  # does not work on sloped P1 and P2
         self.y_steps["y4"] = self.y_steps["y5"]  # following y value
 
     def apply_type_2_anomaly(self, Config: Configuration) -> None:
 
-        self.x_steps[f"x{Config.init_len}"] = 1_000
-        self.y_steps[f"y{Config.init_len}"] = 50
+        # create three new steps in dict with default value
+        temp_len = len(Config.x_steps)
+        temp_x_steps = list(self.x_steps.values())
+        temp_y_steps = list(self.y_steps.values())
+        for p in range(temp_len, temp_len + 1):
+            self.x_steps[f"x{p}"] = 1_000
+            self.y_steps[f"y{p}"] = 50
+        # update the newly created values in reverse order
+        for p in range(6, temp_len + 1):
+            self.x_steps[f"x{p}"] = temp_x_steps[p - 1]
+            self.y_steps[f"y{p}"] = temp_y_steps[p - 1]
 
-        for p in range(len(self.y_steps) - 1, 4, -1):
-            self.y_steps[f"y{p}"] = self.y_steps[f"y{p-1}"]
-            self.x_steps[f"x{p}"] = self.x_steps[f"x{p-1}"]
+        # for p in range(len(self.y_steps) - 1, 4, -1):
+        #    self.y_steps[f"y{p}"] = self.y_steps[f"y{p-1}"]
+        #    self.x_steps[f"x{p}"] = self.x_steps[f"x{p-1}"]
 
+        # get hight for this observation
+        if Config.anomaly_type_2_hight_selected_type == "Normal":
+            hight = Config.anomaly_type_2_hight + gauss(
+                0, Config.anomaly_type_2_hight_normal_stadev
+            )
+        if Config.anomaly_type_2_hight_selected_type == "Uniform":
+            uniform_range = Config.anomaly_type_2_hight_uniform_range / 2
+            hight = Config.anomaly_type_2_hight + uniform(-uniform_range, uniform_range)
+        if Config.anomaly_type_2_hight_selected_type == "Weibull":
+            hight = Config.anomaly_type_2_hight + weibullvariate(
+                Config.anomaly_type_2_hight_weibull_alpha, beta=1.0
+            )
+        self.y_steps["y5"] = self.y_steps["y4"] + hight
         self.x_steps["x5"] = 320  # randomize
-        self.y_steps["y5"] = 25  # randomize
 
-        return self.x_steps, self.y_steps
+    def apply_type_3_anomaly(self, Config: Configuration) -> None:
+        # get offset for this observation
+        if Config.anomaly_type_3_offset_selected_type == "Normal":
+            offset = Config.anomaly_type_3_offset + gauss(
+                0, Config.anomaly_type_3_offset_normal_stadev
+            )
+        elif Config.anomaly_type_3_offset_selected_type == "Uniform":
+            uniform_range = Config.anomaly_type_3_offset_uniform_range / 2
+            offset = Config.anomaly_type_3_offset + uniform(
+                -uniform_range, uniform_range
+            )
+        elif Config.anomaly_type_3_offset_selected_type == "Weibull":
+            offset = Config.anomaly_type_3_offset + weibullvariate(
+                Config.anomaly_type_3_offset_weibull_alpha, beta=1.0
+            )
+        # apply offset to x values
+        self.x_steps[f"x{Config.anomaly_type_3_lower_point[1:]}"] = (
+            self.x_steps[f"x{Config.anomaly_type_3_lower_point[1:]}"] + offset
+        )
+        self.x_steps[f"x{Config.anomaly_type_3_upper_point[1:]}"] = (
+            self.x_steps[f"x{Config.anomaly_type_3_upper_point[1:]}"] - offset
+        )
+        # round x_steps "back to int"
+        self.x_steps = {key: round(self.x_steps[key], 0) for key in self.x_steps}
 
-    def apply_anomaly_incline(self, Config: Configuration, obs_type: str) -> None:
-        if obs_type == "anomaly_type_03":
-            self.x_steps["x2"] = self.x_steps["x2"] + 20
-            self.x_steps["x3"] = self.x_steps["x3"] + 15
-            self.x_steps["x4"] = self.x_steps["x4"] - 15
-            self.x_steps["x5"] = self.x_steps["x5"] - 20
-            self.x_steps["x6"] = self.x_steps["x6"] - 25
+        # apply offset to neighbor x values
 
-            return self.x_steps, self.y_steps
-        if obs_type == "anomaly_type_04":
+    def apply_type_4_anomaly(self, Config: Configuration) -> None:
+        print(self.x_steps)
+        # get offset for this observation
+        if Config.anomaly_type_4_offset_selected_type == "Normal":
+            offset = Config.anomaly_type_4_offset + gauss(
+                0, Config.anomaly_type_4_offset_normal_stadev
+            )
+        if Config.anomaly_type_4_offset_selected_type == "Uniform":
+            uniform_range = Config.anomaly_type_4_offset_uniform_range / 2
+            offset = Config.anomaly_type_4_offset + uniform(
+                -uniform_range, uniform_range
+            )
+        if Config.anomaly_type_4_offset_selected_type == "Weibull":
+            offset = Config.anomaly_type_4_offset + weibullvariate(
+                Config.anomaly_type_4_offset_weibull_alpha, beta=1.0
+            )
 
-            self.x_steps["x2"] = self.x_steps["x2"] - 15
-            self.x_steps["x3"] = self.x_steps["x3"] - 15
-            self.x_steps["x4"] = self.x_steps["x4"] + 15
-            self.x_steps["x5"] = self.x_steps["x5"] + 15
-            self.x_steps["x6"] = self.x_steps["x6"] + 15
-
-            return self.x_steps, self.y_steps
+        # apply offset to x values
+        self.x_steps[f"x{Config.anomaly_type_4_lower_point[1:]}"] = (
+            self.x_steps[f"x{Config.anomaly_type_4_lower_point[1:]}"] - offset
+        )
+        self.x_steps[f"x{Config.anomaly_type_4_upper_point[1:]}"] = (
+            self.x_steps[f"x{Config.anomaly_type_4_upper_point[1:]}"] + offset
+        )
+        # round x_steps "back to int"
+        self.x_steps = {key: round(self.x_steps[key], 0) for key in self.x_steps}
+        print(self.x_steps)
