@@ -35,9 +35,9 @@ number_of_ok = 10000.0
 number_of_ok_to_plot = 10.0
 
 [randomize_scattering]
-apply = 0
+apply = 1
 selected_type = "Normal"
-normal_stadev_val = 0.0
+normal_stadev_val = 0.11
 normal_stadev_min = 0.0
 normal_stadev_max = 1.0
 normal_stadev_stp = 0.01
@@ -61,7 +61,7 @@ uniform_range_val = 1.0
 uniform_range_min = 0.0
 uniform_range_max = 4.0
 uniform_range_stp = 0.01
-weibull_alpha_val = 0.0
+weibull_alpha_val = 0.24
 weibull_alpha_min = 0.0
 weibull_alpha_max = 2.0
 weibull_alpha_stp = 0.01
@@ -70,6 +70,7 @@ upper_xlimitation = 210.0
 
 [randomize_horizontal_offset]
 apply = 0
+equalize = 0
 selected_points = [ "P2", "P6",]
 selected_type = "Weibull"
 normal_stadev_val = 3.5
@@ -80,16 +81,17 @@ uniform_range_val = 15.0
 uniform_range_min = 0.0
 uniform_range_max = 100.0
 uniform_range_stp = 0.1
-weibull_alpha_val = 4.4
+weibull_alpha_val = 20.2
 weibull_alpha_min = 0.0
 weibull_alpha_max = 50.0
 weibull_alpha_stp = 0.1
 
 [randomize_vertical_offset]
 apply = 1
+equalize = 1
 selected_points = [ "P3", "P4", "P5", "P6",]
 selected_type = "Normal"
-normal_stadev_val = 0.12
+normal_stadev_val = 1.52
 normal_stadev_min = 0.0
 normal_stadev_max = 2.0
 normal_stadev_stp = 0.01

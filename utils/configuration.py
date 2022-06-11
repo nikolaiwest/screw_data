@@ -72,6 +72,7 @@ class Configuration:
 
         # set default values for the vertical offset
         self.offset_hori_apply = parameter["randomize_horizontal_offset"]["apply"]
+        self.offset_hori_equalize = parameter["randomize_horizontal_offset"]["equalize"]
         self.offset_hori_selected_points = parameter["randomize_horizontal_offset"][
             "selected_points"
         ]
@@ -90,6 +91,7 @@ class Configuration:
 
         # set default values for the horizontal offset
         self.offset_vert_apply = parameter["randomize_vertical_offset"]["apply"]
+        self.offset_vert_equalize = parameter["randomize_vertical_offset"]["equalize"]
         self.offset_vert_selected_points = parameter["randomize_vertical_offset"][
             "selected_points"
         ]
@@ -414,8 +416,9 @@ def update_config(Config: Configuration) -> None:
         "upper_xlimitation"
     ] = Config.rnd_tightening_upper_xlimitation
 
-    # update default values for the vertical offset
+    # update default values for the horizontal offset
     parameter["randomize_horizontal_offset"]["apply"] = Config.offset_hori_apply
+    parameter["randomize_horizontal_offset"]["equalize"] = Config.offset_hori_equalize
     parameter["randomize_horizontal_offset"][
         "selected_points"
     ] = Config.offset_hori_selected_points
@@ -434,6 +437,7 @@ def update_config(Config: Configuration) -> None:
 
     # update default values for the horizontal offset
     parameter["randomize_vertical_offset"]["apply"] = Config.offset_vert_apply
+    parameter["randomize_vertical_offset"]["equalize"] = Config.offset_vert_equalize
     parameter["randomize_vertical_offset"][
         "selected_points"
     ] = Config.offset_vert_selected_points

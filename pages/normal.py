@@ -106,7 +106,7 @@ def normal_sb_horizontal(
     Config.offset_hori_apply = bool_to_numeric(
         st.checkbox(
             label="Apply random horizontal offset to selected points",
-            value=parameter["randomize_horizontal_offset"]["apply"],
+            value=Config.offset_hori_apply,
         )
     )
     # adjust parameter to specify the offset
@@ -129,6 +129,12 @@ def normal_sb_horizontal(
             selection=parameter["distributions"]["list_of_types"],
             key=3,
         )
+    Config.offset_hori_equalize = bool_to_numeric(
+        st.checkbox(
+            label="Apply the same offset to all selected points",
+            value=Config.offset_hori_equalize,
+        )
+    )
 
 
 def normal_sb_vertical(Config: Configuration, parameter: dict, info_text: dict) -> None:
@@ -171,6 +177,13 @@ def normal_sb_vertical(Config: Configuration, parameter: dict, info_text: dict) 
             selection=parameter["distributions"]["list_of_types"],
             key=4,
         )
+    Config.offset_vert_equalize = bool_to_numeric(
+        st.checkbox(
+            label="Apply the same offset to all selected points",
+            value=Config.offset_vert_equalize,
+            key=21,
+        )
+    )
 
 
 def normal(

@@ -178,6 +178,9 @@ class Observation:
                 for point in Config.offset_hori_selected_points:
                     # get gausian offset
                     offset = gauss(0, Config.offset_hori_normal_stadev)
+                    # check if calculation of a new offset is needed
+                    if not Config.offset_hori_equalize:
+                        offset = gauss(0, Config.offset_hori_normal_stadev)
                     # loop over the selected point and all following points to apply the offset
                     for p in range(int(point[-1:]), len(x_steps)):
                         x_steps[f"x{p}"] = int(x_steps[(f"x{p}")] + offset)
@@ -188,6 +191,9 @@ class Observation:
                     # get uniform offset
                     uniform_range = Config.offset_hori_uniform_range / 2
                     offset = uniform(-uniform_range, uniform_range)
+                    # check if calculation of a new offset is needed
+                    if not Config.offset_hori_equalize:
+                        offset = uniform(-uniform_range, uniform_range)
                     # loop over the selected point and all following points to apply the offset
                     for p in range(int(point[-1:]), len(x_steps)):
                         x_steps[f"x{p}"] = int(x_steps[(f"x{p}")] + offset)
@@ -197,6 +203,11 @@ class Observation:
                 for point in Config.offset_hori_selected_points:
                     # get weibull offset
                     offset = weibullvariate(Config.offset_hori_weibull_alpha, beta=1.0)
+                    # check if calculation of a new offset is needed
+                    if not Config.offset_hori_equalize:
+                        offset = weibullvariate(
+                            Config.offset_hori_weibull_alpha, beta=1.0
+                        )
                     # loop over the selected point and all following points to apply the offset
                     for p in range(int(point[-1:]), len(x_steps)):
                         x_steps[f"x{p}"] = int(x_steps[(f"x{p}")] + offset)
@@ -215,23 +226,34 @@ class Observation:
             # steps as new dict
             y_steps = {k: Config.y_steps[k] for k in Config.y_steps.keys()}
             if Config.offset_vert_selected_type == "Normal":
+                offset = gauss(0, Config.offset_vert_normal_stadev)
+                # check if calculation of a new offset is needed
+                if not Config.offset_vert_equalize:
+                    offset = gauss(0, Config.offset_vert_normal_stadev)
                 for point in Config.offset_vert_selected_points:
                     y_steps[f"y{point[-1:]}"] = float(
-                        y_steps[(f"y{point[-1:]}")]
-                        + gauss(0, Config.offset_vert_normal_stadev)
+                        y_steps[(f"y{point[-1:]}")] + offset
                     )
+
             if Config.offset_vert_selected_type == "Uniform":
+                uniform_range = Config.offset_vert_uniform_range / 2
+                offset = uniform(-uniform_range, uniform_range)
+                # check if calculation of a new offset is needed
+                if not Config.offset_vert_equalize:
+                    offset = uniform(-uniform_range, uniform_range)
                 for point in Config.offset_vert_selected_points:
-                    uniform_range = Config.offset_vert_uniform_range / 2
                     y_steps[f"y{point[-1:]}"] = float(
-                        y_steps[(f"y{point[-1:]}")]
-                        + uniform(-uniform_range, uniform_range)
+                        y_steps[(f"y{point[-1:]}")] + offset
                     )
+
             if Config.offset_vert_selected_type == "Weibull":
+                offset = weibullvariate(Config.offset_vert_weibull_alpha, beta=1.0)
+                # check if calculation of a new offset is needed
+                if not Config.offset_vert_equalize:
+                    offset = weibullvariate(Config.offset_vert_weibull_alpha, beta=1.0)
                 for point in Config.offset_vert_selected_points:
                     y_steps[f"y{point[-1:]}"] = float(
-                        y_steps[(f"y{point[-1:]}")]
-                        + weibullvariate(Config.offset_vert_weibull_alpha, beta=1.0)
+                        y_steps[(f"y{point[-1:]}")] + offset
                     )
             return y_steps
 
@@ -362,7 +384,6 @@ class Observation:
         # apply offset to neighbor x values
 
     def apply_type_4_anomaly(self, Config: Configuration) -> None:
-        print(self.x_steps)
         # get offset for this observation
         if Config.anomaly_type_4_offset_selected_type == "Normal":
             offset = Config.anomaly_type_4_offset + gauss(
@@ -387,4 +408,3 @@ class Observation:
         )
         # round x_steps "back to int"
         self.x_steps = {key: round(self.x_steps[key], 0) for key in self.x_steps}
-        print(self.x_steps)
